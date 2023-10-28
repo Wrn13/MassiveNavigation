@@ -1,5 +1,6 @@
 package com.example.massivenavigation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        //val intent = Intent(this, SensorActivity::class.java)
+        //startActivity(intent)
+
+        val intent = Intent(this, LocationActivity::class.java);
+        startActivity(intent)
     }
 }
 
