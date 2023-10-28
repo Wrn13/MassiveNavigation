@@ -23,15 +23,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        val nodeManager = NodeManager.getInstance();
-
     }
 }
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-            text = "Hello $name!",
+            text = NodeManager.getInstance().findShortestPath(
+                3, 5),
             modifier = modifier
     )
 }
@@ -48,10 +47,10 @@ fun DisplayText(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MassiveNavigationTheme {
-        Greeting("Kevin")
+        //Greeting("Kevin")
         var nodeManager = NodeManager.getInstance();
 
         DisplayText(nodeManager.findShortestPath(
-            0, 8))
+            1, 1))
     }
 }

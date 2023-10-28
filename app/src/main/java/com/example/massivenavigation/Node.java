@@ -40,4 +40,8 @@ public class Node {
     public int getID() {
         return id;
     }
+
+    public HashMap<Node, Float> getEdges() {
+        return edges;
+    }
 }

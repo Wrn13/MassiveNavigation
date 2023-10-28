@@ -1,10 +1,9 @@
 package com.example.massivenavigation;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NodeManager {
     private static NodeManager instance = new NodeManager();
@@ -34,8 +33,50 @@ public class NodeManager {
     }
 
     public String findShortestPath(int startingId, int destinationId) {
+        float[] list = new float[nodes.size()];
+        boolean[] boolList = new boolean[nodes.size()];
+        int[] parents = new int[nodes.size()];
+        for(int i = 0; i < list.length; i++) {
+            list[i] = Float.MAX_VALUE;
+        }
+        list[startingId] = 0;
 
-        return "kevin";
+        while(!boolList[destinationId]) {
+            int id = minDistance(list, boolList);
+            boolList[id] = true;
+            HashMap<Node, Float> edges = nodes.get(id).getEdges();
+
+            for(Map.Entry<Node, Float> entry: edges.entrySet()) {
+                int tempID = entry.getKey().getID();
+                if(!boolList[tempID]) {
+                    if(list[tempID] > entry.getValue() + list[id]) {
+                        list[tempID] = entry.getValue() + list[id];
+                        parents[tempID] = id;
+                    }
+                }
+            }
+        }
+
+        ArrayList<Integer> path = new ArrayList<>();
+        int id = destinationId;
+        path.add(destinationId);
+        while(id != startingId) {
+            path.add(parents[id]);
+            id = parents[id];
+        }
+        return Arrays.toString(path.toArray());
+    }
+
+    private int minDistance(float[] list, boolean[] boolList) {
+        float minDistance = Float.MAX_VALUE;
+        int index = 0;
+        for(int i = 0; i < list.length; i++) {
+            if(!boolList[i]&&list[i]<minDistance){
+                minDistance = list[i];
+                index = i;
+            }
+        }
+        return index;
     }
 
     public void parseNodesFromFile() {
@@ -63,7 +104,7 @@ public class NodeManager {
 
         nodes.get(1).addEdge(nodes.get(0), 4);
         nodes.get(1).addEdge(nodes.get(7), 11);
-        nodes.get(1).addEdge(nodes.get(8), 2);
+        nodes.get(1).addEdge(nodes.get(2), 8);
 
         nodes.get(2).addEdge(nodes.get(1), 8);
         nodes.get(2).addEdge(nodes.get(8), 2);
