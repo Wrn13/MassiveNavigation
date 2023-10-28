@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">MassiveNavigation</string>
     <string name="textview">TextView</string>
     <string name="Position">TextView</string>
     <string name="Time">TextView</string>
     <string name="Error">string</string>
     <string name="element_text">element_text</string>
+    <string name="app_name">Snapshot</string>
 </resources>
