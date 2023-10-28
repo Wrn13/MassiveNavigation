@@ -29,16 +29,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-            text = NodeManager.getInstance().findShortestPath(
-                3, 5),
-            modifier = modifier
-    )
-}
-
-@Composable
-fun DisplayText(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = name,
+        text = "Hello $name!",
         modifier = modifier
     )
 }
@@ -47,10 +38,6 @@ fun DisplayText(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MassiveNavigationTheme {
-        //Greeting("Kevin")
-        var nodeManager = NodeManager.getInstance();
-
-        DisplayText(nodeManager.findShortestPath(
-            1, 1))
+        Greeting("Android")
     }
 }
