@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.Manifest;
 import androidx.activity.result.ActivityResultCaller;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -33,24 +32,8 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-public class LocationActivity extends AppCompatActivity{
-    private ActivityResultLauncher<String []> permissionLauncher;
-    private boolean isContactPermissionGranted = false;
-    private boolean isLocationPermissionGranted = false;
-    private boolean isStoragePermissionGranted = false;
-    private ActivityMainBinding binding;
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+public class LocationActivity extends Activity {
 
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                isContactPermissionGranted = permissions[Manifest.permission.READ_CONTACTS] ?: isContactPermissionGranted
-                isLocationPermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: isLocationPermissionGranted
-                isStoragePermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: isStoragePermissionGranted
-        }
-
-    }
     private TextView errorView;
     private ListView accessPoints;
     private WifiRttManager wifiRttManager;
