@@ -1,6 +1,8 @@
 # MASSIVE NAVIGATION
 A mobile application for android which helps individuals navigate the interiors of large buildings.
 
+Details in https://docs.google.com/presentation/d/1-uZOvhmrPB4oCumhY238l12aBoTui_XUmWmqQ2nFqOU/edit?usp=sharing
+
 ## Development
 Created using Android Studio.
 
