@@ -27,6 +27,7 @@ public class NodeManager {
     private static NodeManager instance = new NodeManager();
 
     public enum Direction{up, right, down, left};
+    public boolean isUpdating = false;
     private float ignoreTime;
 
     private int currentIndex;
@@ -79,7 +80,7 @@ public class NodeManager {
 
     public void startRoute(String destination){
         Node start = nodes.get(8);
-        Node end = start;
+        Node end = null;
         boolean found = false;
         int i = 0;
 
@@ -95,6 +96,7 @@ public class NodeManager {
         currentIndex = 0;
         currentDistance = 0;
         ignoreTime = SystemClock.elapsedRealtime();
+        isUpdating = true;
     }
 
     public void update(){
@@ -113,14 +115,19 @@ public class NodeManager {
                 }
             }
         });
+        String message = "";
+        if(currentIndex==shortestPath.size()-1){
+            message = "You have reached your destination";
+            isUpdating = false;
+        }
+        else {
+            int nextNode = shortestPath.get(currentIndex);
+            HashMap<Node, Float> edges = nodes.get(nextNode)
+                    .getEdges();
+            if (edges.get(nodes.get(shortestPath.get(currentIndex + 1))) <= currentDistance) {
 
-        if(nodes.get(shortestPath.get(currentIndex+1)).getEdges().get(shortestPath.get(currentIndex+1))<=currentDistance){
 
-            String message = "";
-            if(currentIndex+1>=shortestPath.size()-1){
-                message = "You have reached your destination";
-            }
-            else if(currentIndex<shortestPath.size()-2) {
+                if (currentIndex < shortestPath.size() - 2) {
 //                double hypoth = (double)Math.sqrt(Math.pow(nodes.get(currentIndex).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex).getY()-nodes.get(currentIndex+2).getY(),2));
 //                double opposite = (double)Math.sqrt(Math.pow(nodes.get(currentIndex+1).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex+1).getY()-nodes.get(currentIndex+2).getY(),2));
 //                double angle = asin(opposite/hypoth);
@@ -132,62 +139,54 @@ public class NodeManager {
 //                    message = "Take a right turn";
 //                }\\
 
-                Direction first = getDirection(currentIndex,currentIndex+1);
-                Direction second = getDirection(currentIndex+1, currentIndex+2);
+                    Direction first = getDirection(currentIndex, currentIndex + 1);
+                    Direction second = getDirection(currentIndex + 1, currentIndex + 2);
 
-                if(first.equals(second)){
-                    message = "Continue Straight";
-                }
-                else if(first.equals(Direction.down)){
-                    if(second.equals(Direction.right)){
-                        message = "Take a left turn";
-                    }
-                    else{
-                        message = "Take a right turn";
-                    }
-                }
-                else if(first.equals(Direction.up)){
-                    if(second.equals(Direction.right)){
-                        message = "Take a right turn";
-                    }
-                    else{
-                        message = "Take a left turn";
-                    }
-                }
-                else if(first.equals(Direction.right)){
-                    if(second.equals(Direction.down)){
-                        message = "Take a right turn";
-                    }
-                    else{
-                        message = "Take a left turn";
-                    }
-                }
-                else {
-                    if (second.equals(Direction.up)) {
-                        message = "Take a right turn";
+                    if (first.equals(second)) {
+                        message = "Continue Straight";
+                    } else if (first.equals(Direction.down)) {
+                        if (second.equals(Direction.right)) {
+                            message = "Take a left turn";
+                        } else {
+                            message = "Take a right turn";
+                        }
+                    } else if (first.equals(Direction.up)) {
+                        if (second.equals(Direction.right)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
+                    } else if (first.equals(Direction.right)) {
+                        if (second.equals(Direction.down)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
                     } else {
-                        message = "Take a left turn";
+                        if (second.equals(Direction.up)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
                     }
+
+                } else {
+                    Direction first = getDirection(currentIndex, currentIndex + 1);
+                    if (first.equals(Direction.right)) {
+                        message = "Take a right turn";
+                    } else if (first.equals(Direction.left)) {
+                        message = "Take a left turn";
+                    } else {
+                        message = "Continue straight";
+                    }
+
                 }
 
+                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+
+                currentIndex++;
+                currentDistance = 0;
             }
-            else{
-                Direction first = getDirection(currentIndex,currentIndex+1);
-                if(first.equals(Direction.right)){
-                    message = "Take a right turn";
-                }
-                else if(first.equals(Direction.left)){
-                    message = "Take a left turn";
-                }else{
-                    message = "Continue straight";
-                }
-
-            }
-
-            textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,null);
-
-            currentIndex++;
-            currentDistance = 0;
         }
 
 
@@ -304,7 +303,7 @@ public class NodeManager {
 //            tempEdges.add(data[4]);
 //        }
 
-        for(int i = 0; i < nodes.size(); i++) {
+        for(int i = 0; i < tempEdges.size(); i++) {
             data = tempEdges.get(i).split(";");
             for(int j = 0; j < data.length; j++) {
                 nodes.get(i).addEdge(nodes.get(Integer.parseInt(data[j])));

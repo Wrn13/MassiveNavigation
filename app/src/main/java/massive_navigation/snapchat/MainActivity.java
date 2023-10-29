@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
         });
         getGPS();
 
-        NodeManager.getInstance().findShortestPath(0, 1);
-
         // create an object textToSpeech and adding features into it
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -170,7 +168,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Intent myIntent = getIntent();
         String destString = myIntent.getStringExtra("@destination");
-        NodeManager.getInstance().startRoute(destString);
+        if(destString != null){
+            NodeManager nm = NodeManager.getInstance();
+            nm.startRoute(destString);
+            while (nm.isUpdating) {
+                nm.update();
+            }
+        }
     }
     @Override
     public void onResume() {
