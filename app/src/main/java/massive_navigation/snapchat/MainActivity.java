@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 // if No error is found then only it will run
                 if(i!=TextToSpeech.ERROR){
                     // To Choose language of speech
-                    textToSpeech.setLanguage(Locale.ENGLISH);
+                    textToSpeech.setLanguage(Locale.UK);
                 }
             }
         });
