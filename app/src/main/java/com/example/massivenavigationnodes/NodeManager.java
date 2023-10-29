@@ -27,6 +27,9 @@ public class NodeManager {
     private static NodeManager instance = new NodeManager();
 
     public enum Direction{up, right, down, left};
+
+    public String message = "";
+    public boolean messageUpdate = false;
     public boolean isUpdating = false;
     private float ignoreTime;
 
@@ -35,16 +38,16 @@ public class NodeManager {
     private float currentDistance;
     private ContentResolver resolver;
     private MainActivity mainActivity;
-    private Context context;
 
-    private final double speed = 75;
+    public static Context context;
+
+    private final double speed = 50;
     private ArrayList<Node> nodes;
     private ArrayList<Integer> shortestPath;
 
-    TextToSpeech textToSpeech;
+    private static TextToSpeech textToSpeech;
 
     public static NodeManager getInstance() {
-
         return instance;
     }
 
@@ -57,8 +60,12 @@ public class NodeManager {
         this.mainActivity = mainActivity;
     }
 
+    public void setMessageUpdate(boolean bool) {
+        this.messageUpdate = bool;
+    }
+
     public void setContext(Context context) {
-        this.context = context;
+        NodeManager.context = context;
     }
 
     public void reset() {
@@ -98,25 +105,15 @@ public class NodeManager {
         ignoreTime = SystemClock.elapsedRealtime();
         isUpdating = true;
     }
-
+    private int count = 0;
     public void update(){
-
+        count++;
         currentDistance += speed * (SystemClock.elapsedRealtime()-ignoreTime);
         ignoreTime = SystemClock.elapsedRealtime();
 
-        textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int i) {
-
-                // if No error is found then only it will run
-                if(i!=TextToSpeech.ERROR){
-                    // To Choose language of speech
-                    textToSpeech.setLanguage(Locale.UK);
-                }
-            }
-        });
-        String message = "";
+        message = "";
         if(currentIndex==shortestPath.size()-1){
+            messageUpdate = true;
             message = "You have reached your destination";
             isUpdating = false;
         }
@@ -126,6 +123,7 @@ public class NodeManager {
                     .getEdges();
             if (edges.get(nodes.get(shortestPath.get(currentIndex + 1))) <= currentDistance) {
 
+            messageUpdate = true;
 
                 if (currentIndex < shortestPath.size() - 2) {
 //                double hypoth = (double)Math.sqrt(Math.pow(nodes.get(currentIndex).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex).getY()-nodes.get(currentIndex+2).getY(),2));
@@ -182,14 +180,14 @@ public class NodeManager {
 
                 }
 
-                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
-
                 currentIndex++;
                 currentDistance = 0;
+
+                mainActivity.tryListener();
             }
         }
 
-
+        //int i = MainActivity.textToSpeech.speak(""+message, TextToSpeech.QUEUE_ADD, null);
     }
 
     public Direction getDirection(int first, int second){
