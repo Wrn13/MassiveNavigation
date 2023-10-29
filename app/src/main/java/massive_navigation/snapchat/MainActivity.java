@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
+
 
 import android.content.IntentSender;
 import android.widget.Toast;
@@ -32,11 +35,16 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.Task;
+import com.example.massivenavigationnodes.SensorActivity;
 
 import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
+
+import android.speech.tts.TextToSpeech;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     double latitude, longitude;
     private LocationRequest locationRequest;
     private long prevTime = System.currentTimeMillis();
+    TextToSpeech textToSpeech;
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -87,18 +96,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         chat_btn.setOnClickListener(v -> {
+            textToSpeech.speak("Pick where to go.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 0) {
                 viewPager.setCurrentItem(0, true);
             }
         });
 
         story_btn.setOnClickListener(v -> {
+            textToSpeech.speak("Check out other places.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 2) {
                 viewPager.setCurrentItem(2, true);
             }
         });
 
         settings.setOnClickListener(view -> {
+            textToSpeech.speak("Settings.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 3) {
                 viewPager.setCurrentItem(3, true);
             }
@@ -106,6 +118,20 @@ public class MainActivity extends AppCompatActivity {
         getGPS();
 
         NodeManager.getInstance().findShortestPath(0, 1);
+
+        // create an object textToSpeech and adding features into it
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
+
     }
 
     private void getGPS(){
@@ -143,6 +169,12 @@ public class MainActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
+        Intent i = new Intent(this, SensorActivity.class);
+        startActivity(i
+                      
+                      
+                      
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
 
@@ -193,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
 }
