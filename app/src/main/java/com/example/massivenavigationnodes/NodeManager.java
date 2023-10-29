@@ -2,6 +2,7 @@ package com.example.massivenavigationnodes;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.net.Uri;
 
 import java.io.BufferedReader;
@@ -107,10 +108,11 @@ public class NodeManager {
         return index;
     }
 
-    public void parseNodesFromFile() throws IOException {
+    public void parseNodesFromFile() {
         Scanner scanner;
         try {
-            scanner = new Scanner(new File(context.getFilesDir(),"NodeList.csv"));
+            AssetManager am = context.getAssets();
+            scanner = new Scanner(am.open("NodeList.csv"));
         } catch (Exception e) {
             System.exit(0);
             return;
