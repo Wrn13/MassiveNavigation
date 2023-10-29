@@ -1,25 +1,45 @@
 package com.example.massivenavigationnodes;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class NodeManager {
-    private static final NodeManager instance = new NodeManager();
+    private static NodeManager instance = new NodeManager();
+
+    private ContentResolver resolver;
+    private Context context;
 
     private ArrayList<Node> nodes;
 
     public static NodeManager getInstance() {
+
         return instance;
     }
 
     private NodeManager() {
         reset();
-        parseNodesFromFile();
-        findShortestPath(4, 8);
+    }
+
+    public void setContentResolver(ContentResolver contResolver) {
+        resolver = contResolver;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public void reset() {
@@ -29,6 +49,11 @@ public class NodeManager {
         for (Node n : temp) {
 
         }*/
+    }
+
+    public void testNodes() throws IOException {
+        parseNodesFromFile();
+        findShortestPath(4, 8);
     }
 
     public void addNode(Node node) {
@@ -82,10 +107,10 @@ public class NodeManager {
         return index;
     }
 
-    public void parseNodesFromFile() {
+    public void parseNodesFromFile() throws IOException {
         Scanner scanner;
         try {
-            scanner = new Scanner(new File("NodeList.csv"));
+            scanner = new Scanner(new File(context.getFilesDir(),"NodeList.csv"));
         } catch (Exception e) {
             System.exit(0);
             return;
@@ -100,6 +125,28 @@ public class NodeManager {
             nodes.add(new Node(data[1], Float.parseFloat(data[5]), Float.parseFloat(data[6])));
             tempEdges.add(data[4]);
         }
+
+//        StringBuilder stringBuilder = new StringBuilder();
+//        BufferedReader reader;
+//        try {
+//            InputStream inputStream = resolver.openInputStream(Uri.fromFile(new File(this.context.getFilesDir(),"NodeList.csv")));
+//            reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//
+//        }
+//
+//
+//
+//        reader.readLine();
+//
+//        String[] data;
+//        ArrayList<String> tempEdges = new ArrayList<>();
+//        while(reader.ready()) {
+//            data = reader.readLine().split(",");
+//            nodes.add(new Node(data[1], Float.parseFloat(data[5]), Float.parseFloat(data[6])));
+//            tempEdges.add(data[4]);
+//        }
 
         for(int i = 0; i < nodes.size(); i++) {
             data = tempEdges.get(i).split(";");

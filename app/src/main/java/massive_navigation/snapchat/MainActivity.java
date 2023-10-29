@@ -1,6 +1,7 @@
 package massive_navigation.snapchat;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -19,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.IntentSender;
 import android.widget.Toast;
 
+import com.example.massivenavigationnodes.Node;
 import com.example.massivenavigationnodes.NodeManager;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -30,6 +32,8 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
@@ -47,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //NodeManager.getInstance().setContentResolver(getContentResolver());
+        NodeManager.getInstance().setContext(getApplicationContext());
+
+        try {
+            NodeManager.getInstance().testNodes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
