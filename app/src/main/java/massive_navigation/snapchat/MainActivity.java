@@ -84,17 +84,6 @@ public class MainActivity extends AppCompatActivity {
         story_btn = findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
 
-
-        CaptureBtn.setOnClickListener(v -> {
-            if (viewPager.getCurrentItem() != 1) {
-                viewPager.setCurrentItem(1, true);
-            } else {
-                Camera fragment = (Camera) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.ma_view_pager + ":" + viewPager.getCurrentItem());
-                fragment.TakePhoto();
-            }
-        });
-
-
         chat_btn.setOnClickListener(v -> {
             textToSpeech.speak("Pick where to go.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 0) {
@@ -168,12 +157,6 @@ public class MainActivity extends AppCompatActivity {
         boolean isEnabled;
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
-        Intent i = new Intent(this, SensorActivity.class);
-        startActivity(i
-                      
-                      
                       
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
