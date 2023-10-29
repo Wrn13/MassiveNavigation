@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Fragment;
+package massive_navigation.snapchat.Fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-import nisaefendioglu.snapchat.R;
-import nisaefendioglu.snapchat.Adapter.StoriesAdapter;
-import nisaefendioglu.snapchat.DataList.StoriesList;
+import massive_navigation.snapchat.R;
+import massive_navigation.snapchat.Adapter.StoriesAdapter;
+import massive_navigation.snapchat.DataList.StoriesList;
 
 public class Stories  extends Fragment {
     View view;

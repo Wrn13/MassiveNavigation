@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat;
+package massive_navigation.snapchat;
 
 import org.junit.Test;
 

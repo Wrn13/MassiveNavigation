@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Adapter;
+package massive_navigation.snapchat.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import nisaefendioglu.snapchat.R;
-import nisaefendioglu.snapchat.DataList.ChatList;
+import massive_navigation.snapchat.R;
+import massive_navigation.snapchat.DataList.ChatList;
 
 public class ChatAdapter extends BaseAdapter {
 

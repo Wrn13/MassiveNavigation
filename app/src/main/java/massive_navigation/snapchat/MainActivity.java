@@ -1,9 +1,8 @@
-package nisaefendioglu.snapchat;
+package massive_navigation.snapchat;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,10 +10,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import nisaefendioglu.snapchat.Adapter.MainPagerAdapter;
-import nisaefendioglu.snapchat.Fragment.Camera;
-import nisaefendioglu.snapchat.Fragment.Chat;
-import nisaefendioglu.snapchat.Fragment.Stories;
+import massive_navigation.snapchat.Adapter.MainPagerAdapter;
+import massive_navigation.snapchat.Fragment.Camera;
+import massive_navigation.snapchat.R;
 
 public class MainActivity extends AppCompatActivity {
 
