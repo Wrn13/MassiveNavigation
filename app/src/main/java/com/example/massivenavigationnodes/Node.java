@@ -5,11 +5,11 @@ import java.util.HashMap;
 public class Node {
     private static int maxID = 0;
 
-    private int id;
-    private String name;
-    private float x;
-    private float y;
-    private HashMap<Node, Float> edges;
+    private final int id;
+    private final String name;
+    private final float x;
+    private final float y;
+    private final HashMap<Node, Float> edges;
 
     public Node(String name, float x, float y) {
         this.name = name;
