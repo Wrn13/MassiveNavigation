@@ -38,12 +38,12 @@
         android:layout_marginRight="30dp" />
 
 
-    <nisaefendioglu.snapchat.View.SnapBarView
+    <massive_navigation.snapchat.View.SnapBarView
         android:id="@+id/ma_chat_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginRight="8dp">
 
-    </nisaefendioglu.snapchat.View.SnapBarView>
+    </massive_navigation.snapchat.View.SnapBarView>
 </FrameLayout>

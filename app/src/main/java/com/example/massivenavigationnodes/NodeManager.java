@@ -1,4 +1,4 @@
-package com.example.massivenavigation;
+package com.example.massivenavigationnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;

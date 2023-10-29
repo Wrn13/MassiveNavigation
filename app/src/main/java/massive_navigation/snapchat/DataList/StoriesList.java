@@ -1,14 +1,14 @@
-package nisaefendioglu.snapchat.DataList;
+package massive_navigation.snapchat.DataList;
 
-public class ChatList {
+public class StoriesList {
 
     private String name;
-    private String messageStatus;
+    private String clock;
     private int image;
 
-    public ChatList(String name, String messageStatus, int image) {
+    public StoriesList(String name, String clock, int image) {
         this.name = name;
-        this.messageStatus = messageStatus;
+        this.clock = clock;
         this.image = image;
 
     }
@@ -21,12 +21,12 @@ public class ChatList {
         this.name = name;
     }
 
-    public String getMessageStatus() {
-        return messageStatus;
+    public String getClock() {
+        return clock;
     }
 
-    public void setMessageStatus(String messageStatus) {
-        this.messageStatus = messageStatus;
+    public void setClock(String clock) {
+        this.clock = clock;
     }
 
     public int getImage() {
@@ -37,4 +37,3 @@ public class ChatList {
         this.image = image;
     }
 }
-
