@@ -3,6 +3,7 @@ package massive_navigation.snapchat;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,11 +13,25 @@ import androidx.viewpager.widget.ViewPager;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
-import massive_navigation.snapchat.R;
 
-public class MainActivity extends AppCompatActivity {
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     ImageView CaptureBtn,chat_btn,story_btn,settings;
+    private SensorManager sensorManager;
+    private Sensor magnetometer;
+    private Sensor accelerometer;
+    private float[] lastAccelerometer = new float[3];
+    private float[] lastMagnetometer = new float[3];
+    private boolean lastAccelerometerSet = false;
+    private boolean lastMagnetometerSet = false;
+    private float[] rotationMatrix = new float[9];
+    private float[] orientation = new float[3];
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -24,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
 
         final ViewPager viewPager = findViewById(R.id.ma_view_pager);
 
@@ -65,9 +85,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor == magnetometer) {
+            System.arraycopy(event.values, 0, lastMagnetometer, 0, event.values.length);
+            lastMagnetometerSet = true;
+            Log.d("DEBUG",""+lastMagnetometer);
+        } else if (event.sensor == accelerometer) {
+            System.arraycopy(event.values, 0, lastAccelerometer, 0, event.values.length);
+            lastAccelerometerSet = true;
+        }
+
+        if (lastAccelerometerSet && lastMagnetometerSet) {
+            SensorManager.getRotationMatrix(rotationMatrix, null, lastAccelerometer, lastMagnetometer);
+            SensorManager.getOrientation(rotationMatrix, orientation);
+
+            float azimuthInRadians = orientation[0];
+            float azimuthInDegrees = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
 }
