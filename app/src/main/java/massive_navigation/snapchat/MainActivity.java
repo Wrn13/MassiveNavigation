@@ -25,7 +25,7 @@ import android.content.IntentSender;
 import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 
-import com.example.massivenavigationnodes.Node;
+
 import com.example.massivenavigationnodes.NodeManager;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
