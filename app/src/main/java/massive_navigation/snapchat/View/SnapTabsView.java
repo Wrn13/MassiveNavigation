@@ -21,7 +21,6 @@ import massive_navigation.snapchat.R;
 
 public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
-    private ImageView mCapturePhotoBtn;
     private ImageView mChatBtn;
     private ImageView mStoryBtn,settings;
     private View mIndicator;
@@ -53,31 +52,12 @@ public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeL
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_snap_tabs,this,true);
 
-        mCapturePhotoBtn =   findViewById(R.id.capture_photo_btn);
         mChatBtn =  findViewById(R.id.chat_btn);
         mStoryBtn =   findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
 
         final int centerPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 122,
                 getContext().getResources().getDisplayMetrics());
-
-
-
-        mCapturePhotoBtn.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                mCenterTranslationY = getHeight() - mCapturePhotoBtn.getBottom();
-                float distanceBetween = mCapturePhotoBtn.getX() - mChatBtn.getX();
-                mEndViewsTranslationX = distanceBetween - centerPadding;
-                mTranslationY =  getHeight() - mChatBtn.getBottom();
-                mIndicatorTranslationX = centerPadding;
-
-                mCapturePhotoBtn.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-            }
-
-        });
 
     }
 
@@ -108,10 +88,6 @@ public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeL
         mChatBtn.setTranslationX(-mEndViewsTranslationX * fractionFromCenter);
         mStoryBtn.setTranslationX(mEndViewsTranslationX * fractionFromCenter);
 
-        mCapturePhotoBtn.setScaleX(centerScale);
-        mCapturePhotoBtn.setScaleY(centerScale);
-
-        mCapturePhotoBtn.setTranslationY(centerTransY);
         mChatBtn.setTranslationY(mTranslationY-50);
         mStoryBtn.setTranslationY(mTranslationY-50);
 

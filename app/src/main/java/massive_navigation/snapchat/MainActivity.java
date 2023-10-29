@@ -35,7 +35,7 @@ import massive_navigation.snapchat.Fragment.Camera;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView CaptureBtn, chat_btn, story_btn, settings;
+    ImageView chat_btn, story_btn, settings;
     double latitude, longitude;
     private LocationRequest locationRequest;
     private long prevTime = System.currentTimeMillis();
@@ -57,19 +57,9 @@ public class MainActivity extends AppCompatActivity {
         MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainPagerAdapter);
         viewPager.setCurrentItem(1);
-        CaptureBtn = findViewById(R.id.capture_photo_btn);
         chat_btn = findViewById(R.id.chat_btn);
         story_btn = findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
-
-        CaptureBtn.setOnClickListener(v -> {
-            if (viewPager.getCurrentItem() != 1) {
-                viewPager.setCurrentItem(1, true);
-            } else {
-                Camera fragment = (Camera) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.ma_view_pager + ":" + viewPager.getCurrentItem());
-                fragment.TakePhoto();
-            }
-        });
 
 
         chat_btn.setOnClickListener(v -> {
