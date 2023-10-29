@@ -1,4 +1,4 @@
-package massive_navigation.snapchat;
+package com.example.massivenavigationnodes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,6 +25,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import massive_navigation.snapchat.R;
+
 public class SensorActivity extends Activity implements SensorEventListener {
 
     private SensorManager sensorManager;
@@ -49,6 +51,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private boolean lastAccelerometerSet = false;
     private boolean lastMagnetometerSet = false;
     private float[] orientation = new float[3];
+    private TextView compassOutput;
 
 
     long prevTime = 0L;
@@ -61,6 +64,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         positionView = (TextView) findViewById(R.id.PositionData);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         compassImage = findViewById(R.id.compass);
+        compassOutput = findViewById(R.id.compassOutput);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -134,6 +138,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         if (event.sensor == magnetometer) {
             System.arraycopy(event.values, 0, lastMagnetometer, 0, event.values.length);
             lastMagnetometerSet = true;
+            compassOutput.setText(""+lastMagnetometer);
         } else if (event.sensor == accelerometer) {
             System.arraycopy(event.values, 0, lastAccelerometer, 0, event.values.length);
             lastAccelerometerSet = true;

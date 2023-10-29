@@ -1,6 +1,7 @@
 package massive_navigation.snapchat;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.massivenavigationnodes.SensorActivity;
+
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
-import massive_navigation.snapchat.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -66,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 
 }
