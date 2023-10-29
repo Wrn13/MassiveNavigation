@@ -25,6 +25,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import java.util.Arrays;
+
 import massive_navigation.snapchat.R;
 
 public class SensorActivity extends Activity implements SensorEventListener {
@@ -40,8 +42,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
     private final float[] rotationMatrix = new float[9];
     private final float[] orientationAngles = new float[3];
-    TextView orientationView;
-    TextView positionView;
 
     private ImageView compassImage;
     private Sensor magnetometer;
@@ -60,8 +60,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sensor_display);
-        orientationView = (TextView)findViewById(R.id.OrientationData);
-        positionView = (TextView) findViewById(R.id.PositionData);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         compassImage = findViewById(R.id.compass);
         compassOutput = findViewById(R.id.compassOutput);
@@ -138,7 +136,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         if (event.sensor == magnetometer) {
             System.arraycopy(event.values, 0, lastMagnetometer, 0, event.values.length);
             lastMagnetometerSet = true;
-            compassOutput.setText(""+lastMagnetometer);
+
         } else if (event.sensor == accelerometer) {
             System.arraycopy(event.values, 0, lastAccelerometer, 0, event.values.length);
             lastAccelerometerSet = true;
@@ -150,13 +148,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
             float azimuthInRadians = orientation[0];
             float azimuthInDegrees = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
-
-            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.compass);
-            Matrix matrix = new Matrix();
-            matrix.postRotate(-azimuthInDegrees);
-            Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
-
-            compassImage.setImageBitmap(rotatedBitmap);
+            compassOutput.setText(String.format("%f", azimuthInDegrees));
         }
     }
 
@@ -171,16 +163,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         SensorManager.getOrientation(rotationMatrix, orientationAngles);
 
-        // "orientationAngles" now has up-to-date information.
-        orientationView.setText("");
-        orientationView.append("Orientation Matrix:\n ");
-        for (float orientationAngle : orientationAngles) {
-            orientationView.append(orientationAngle + " ");
-        }
-        orientationView.append("\n");
-
-        positionView.setText("");
-        positionView.append("Position Data:");
         positionReading[0] = runningVelocityReading[0] + (float) (Math.cos(orientationAngles[0]) * Math.cos(orientationAngles[1]) * accelerometerReading[0]
         + (Math.cos(orientationAngles[0]) * Math.sin(orientationAngles[1]) * Math.sin(orientationAngles[2]) - Math.sin(orientationAngles[0])*Math.cos(orientationAngles[2]))*accelerometerReading[1]
         + (Math.cos(orientationAngles[0]) * Math.sin(orientationAngles[1]) * Math.cos(orientationAngles[2]) + Math.sin(orientationAngles[0])*Math.sin(orientationAngles[2]))*accelerometerReading[2]);
@@ -189,9 +171,5 @@ public class SensorActivity extends Activity implements SensorEventListener {
                 + (Math.sin(orientationAngles[0]) * Math.sin(orientationAngles[1]) * Math.cos(orientationAngles[2]) - Math.cos(orientationAngles[0])*Math.sin(orientationAngles[2]))*accelerometerReading[2]);
         positionReading[2] = runningVelocityReading[2] + (float) (-1*Math.sin(orientationAngles[1]) * positionReading[0] + Math.sin(orientationAngles[0])*Math.cos(orientationAngles[1]) * accelerometerReading[1]
         + Math.cos(orientationAngles[0]) * Math.cos(orientationAngles[1]) * accelerometerReading[2]);
-        for(int i =(int)'x'; i<=(int)'z'; ++i){
-            positionView.append((char) i + ": " + positionReading[(int)(i-'x')] + "\n");
-        }
-        positionView.append("\n");
     }
 }
