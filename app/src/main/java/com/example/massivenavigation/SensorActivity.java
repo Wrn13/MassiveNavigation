@@ -1,4 +1,4 @@
-package com.example.massivenavigation;
+/*package com.example.massivenavigation;
 
 import android.app.Activity;
 import android.content.Context;
@@ -125,4 +125,4 @@ public class SensorActivity extends Activity implements SensorEventListener {
         }
         positionView.append("\n");
     }
-}
+}*/

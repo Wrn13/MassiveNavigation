@@ -1,5 +1,6 @@
 package nisaefendioglu.snapchat;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Intent i = new Intent(this, LocationActivity.class);
+        startActivity(i);
 
 
 
