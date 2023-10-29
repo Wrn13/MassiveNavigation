@@ -88,11 +88,12 @@ public class NodeManager {
 
         ArrayList<Integer> path = new ArrayList<>();
         int id = destinationId;
-        path.add(destinationId);
+        path.add(0,destinationId);
         while(id != startingId) {
-            path.add(parents[id]);
+            path.add(0,parents[id]);
             id = parents[id];
         }
+
         return Arrays.toString(path.toArray());
     }
 
