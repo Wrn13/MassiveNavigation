@@ -15,9 +15,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import android.speech.tts.TextToSpeech;
 
 import massive_navigation.snapchat.MainActivity;
 
@@ -37,6 +39,8 @@ public class NodeManager {
     private final double speed = 75;
     private ArrayList<Node> nodes;
     private ArrayList<Integer> shortestPath;
+
+    TextToSpeech textToSpeech;
 
     public static NodeManager getInstance() {
 
@@ -97,6 +101,18 @@ public class NodeManager {
 
         currentDistance += speed * (SystemClock.elapsedRealtime()-ignoreTime);
         ignoreTime = SystemClock.elapsedRealtime();
+
+        textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
 
         if(nodes.get(shortestPath.get(currentIndex+1)).getEdges().get(shortestPath.get(currentIndex+1))<=currentDistance){
 
@@ -168,6 +184,7 @@ public class NodeManager {
 
             }
 
+            textToSpeech.speak(message,TextToSpeech.QUEUE_FLUSH,null);
 
             currentIndex++;
             currentDistance = 0;
