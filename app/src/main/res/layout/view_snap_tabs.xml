@@ -9,14 +9,6 @@
     >
 
     <ImageView
-        android:id="@+id/capture_photo_btn"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="30dp"
-        android:src="@drawable/camera"/>
-
-    <ImageView
         android:id="@+id/chat_btn"
         android:layout_width="30dp"
         android:layout_height="30dp"
