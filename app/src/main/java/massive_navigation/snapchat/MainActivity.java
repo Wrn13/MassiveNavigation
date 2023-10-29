@@ -19,12 +19,17 @@ import com.example.massivenavigationnodes.SensorActivity;
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
 
+import android.speech.tts.TextToSpeech;
+
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageView chat_btn, story_btn, settings;
     double latitude, longitude;
     private LocationRequest locationRequest;
     private long prevTime = System.currentTimeMillis();
+    TextToSpeech textToSpeech;
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -49,23 +54,39 @@ public class MainActivity extends AppCompatActivity {
 
 
         chat_btn.setOnClickListener(v -> {
+            textToSpeech.speak("Pick where to go.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 0) {
                 viewPager.setCurrentItem(0, true);
             }
         });
 
         story_btn.setOnClickListener(v -> {
+            textToSpeech.speak("Check out other places.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 2) {
                 viewPager.setCurrentItem(2, true);
             }
         });
 
         settings.setOnClickListener(view -> {
+            textToSpeech.speak("Settings.",TextToSpeech.QUEUE_FLUSH,null);
             if (viewPager.getCurrentItem() != 3) {
                 viewPager.setCurrentItem(3, true);
             }
         });
         getGPS();
+
+        // create an object textToSpeech and adding features into it
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
 
     }
 
