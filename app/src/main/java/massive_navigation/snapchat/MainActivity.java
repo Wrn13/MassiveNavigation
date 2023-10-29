@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.IntentSender;
 import android.widget.Toast;
 
+import com.example.massivenavigationnodes.NodeManager;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationCallback;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         chat_btn.setOnClickListener(v -> {
             if (viewPager.getCurrentItem() != 0) {
                 viewPager.setCurrentItem(0, true);
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
         getGPS();
 
+        NodeManager.getInstance().findShortestPath(0, 1);
     }
 
     private void getGPS(){
