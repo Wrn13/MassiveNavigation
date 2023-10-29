@@ -22,6 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.IntentSender;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
 
 import com.example.massivenavigationnodes.Node;
 import com.example.massivenavigationnodes.NodeManager;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         //NodeManager.getInstance().setContentResolver(getContentResolver());
         NodeManager.getInstance().setContext(getApplicationContext());
+        NodeManager.getInstance().setMainActivity(this);
+
 
         try {
             NodeManager.getInstance().testNodes();
