@@ -130,59 +130,6 @@ public class LocationActivity extends AppCompatActivity {
 
     }
 
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        long initTime = System.currentTimeMillis();
-        while (true) {
-            long newTime = System.currentTimeMillis();
-            if(newTime - initTime < 1000){
-                continue;
-            }else{
-                initTime = newTime;
-            }
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-            List<ScanResult> scanResults = wifiManager.getScanResults().subList(0, 2);
-            RangingRequest.Builder builder = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                builder = new RangingRequest.Builder();
-
-                RangingRequest.getMaxPeers();
-                for (ScanResult result : scanResults) {
-                    builder.addAccessPoint(result);
-                }
-
-                RangingRequest req = builder.build();
-                Executor executor = getMainExecutor();
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                wifiRttManager.startRanging(req, executor, new RangingResultCallback() {
-
-                    @Override
-                    public void onRangingFailure(int code) {
-                        errorView.setText("ERROR: Ranging Request Failed");
-                    }
-
-                    @Override
-                    public void onRangingResults(@NonNull List<RangingResult> list) {
-                        RangingResultsAdapter adapter = new RangingResultsAdapter(la, list);
-                        accessPoints.setAdapter(adapter);
-                    }
-                });
-            }
-        }
-    }
-*/
     public static class RangingResultsAdapter extends ArrayAdapter<RangingResult>{
 
         public RangingResultsAdapter(@NonNull Context context, List<RangingResult> resource) {
