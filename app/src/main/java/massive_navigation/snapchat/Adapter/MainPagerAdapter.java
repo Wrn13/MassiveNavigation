@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Adapter;
+package massive_navigation.snapchat.Adapter;
 
 
 import android.os.Build;
@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import nisaefendioglu.snapchat.Fragment.Camera;
-import nisaefendioglu.snapchat.Fragment.Chat;
-import nisaefendioglu.snapchat.Fragment.Settings;
-import nisaefendioglu.snapchat.Fragment.Stories;
+import massive_navigation.snapchat.Fragment.Camera;
+import massive_navigation.snapchat.Fragment.Chat;
+import massive_navigation.snapchat.Fragment.Settings;
+import massive_navigation.snapchat.Fragment.Stories;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
     public MainPagerAdapter(FragmentManager fm) {

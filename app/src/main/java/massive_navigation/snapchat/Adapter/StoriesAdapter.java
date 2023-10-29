@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Adapter;
+package massive_navigation.snapchat.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,14 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import nisaefendioglu.snapchat.R;
-import nisaefendioglu.snapchat.DataList.StoriesList;
+import massive_navigation.snapchat.R;
+import massive_navigation.snapchat.DataList.StoriesList;
 
 public class StoriesAdapter extends BaseAdapter {
 

@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Fragment;
+package massive_navigation.snapchat.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import nisaefendioglu.snapchat.R;
+import massive_navigation.snapchat.R;
 
 
 public class Settings extends Fragment {

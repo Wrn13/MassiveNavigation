@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Fragment;
+package massive_navigation.snapchat.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-import nisaefendioglu.snapchat.R;
-import nisaefendioglu.snapchat.Adapter.ChatAdapter;
-import nisaefendioglu.snapchat.DataList.ChatList;
+import massive_navigation.snapchat.R;
+import massive_navigation.snapchat.Adapter.ChatAdapter;
+import massive_navigation.snapchat.DataList.ChatList;
 
 public class Chat extends Fragment {
     View view;

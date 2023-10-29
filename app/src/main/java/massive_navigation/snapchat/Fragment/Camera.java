@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.Fragment;
+package massive_navigation.snapchat.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,7 +39,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.Collections;
 
-import nisaefendioglu.snapchat.R;
+import massive_navigation.snapchat.R;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera extends Fragment  {

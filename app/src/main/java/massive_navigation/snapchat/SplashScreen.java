@@ -1,10 +1,13 @@
-package nisaefendioglu.snapchat;
+package massive_navigation.snapchat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+
+import massive_navigation.snapchat.MainActivity;
+import massive_navigation.snapchat.R;
 
 
 public class SplashScreen extends Activity {

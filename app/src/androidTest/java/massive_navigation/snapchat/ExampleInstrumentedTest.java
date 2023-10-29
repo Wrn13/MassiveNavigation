@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat;
+package massive_navigation.snapchat;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

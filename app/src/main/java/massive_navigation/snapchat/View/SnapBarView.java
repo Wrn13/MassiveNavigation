@@ -1,4 +1,4 @@
-package nisaefendioglu.snapchat.View;
+package massive_navigation.snapchat.View;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-import nisaefendioglu.snapchat.Fragment.Settings;
-import nisaefendioglu.snapchat.MainActivity;
-import nisaefendioglu.snapchat.R;
+import massive_navigation.snapchat.Fragment.Settings;
+import massive_navigation.snapchat.MainActivity;
+import massive_navigation.snapchat.R;
 
 public class SnapBarView extends FrameLayout implements ViewPager.OnPageChangeListener {
 

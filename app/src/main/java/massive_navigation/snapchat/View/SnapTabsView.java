@@ -1,5 +1,5 @@
 
-package nisaefendioglu.snapchat.View;
+package massive_navigation.snapchat.View;
 
 
 import android.animation.ArgbEvaluator;
@@ -15,11 +15,9 @@ import android.widget.ImageView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import nisaefendioglu.snapchat.Fragment.Settings;
-import nisaefendioglu.snapchat.R;
+import massive_navigation.snapchat.R;
 
 public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
