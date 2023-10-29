@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Looper;
+import android.annotation.SuppressLint;
 import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.massivenavigationnodes.SensorActivity;
@@ -16,10 +19,12 @@ import com.example.massivenavigationnodes.SensorActivity;
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    ImageView CaptureBtn,chat_btn,story_btn,settings;
+    ImageView chat_btn, story_btn, settings;
+    double latitude, longitude;
+    private LocationRequest locationRequest;
+    private long prevTime = System.currentTimeMillis();
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -28,24 +33,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
+
         final ViewPager viewPager = findViewById(R.id.ma_view_pager);
 
         MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainPagerAdapter);
         viewPager.setCurrentItem(1);
-        CaptureBtn = findViewById(R.id.capture_photo_btn);
         chat_btn = findViewById(R.id.chat_btn);
         story_btn = findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
-
-        CaptureBtn.setOnClickListener(v -> {
-            if (viewPager.getCurrentItem() != 1) {
-                viewPager.setCurrentItem(1, true);
-            } else {
-                Camera fragment = (Camera) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.ma_view_pager + ":" + viewPager.getCurrentItem());
-                fragment.TakePhoto();
-            }
-        });
 
 
         chat_btn.setOnClickListener(v -> {
@@ -60,17 +60,106 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (viewPager.getCurrentItem() != 3) {
-                    viewPager.setCurrentItem(3, true);
+        settings.setOnClickListener(view -> {
+            if (viewPager.getCurrentItem() != 3) {
+                viewPager.setCurrentItem(3, true);
+            }
+        });
+        getGPS();
+
+    }
+
+    private void getGPS(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (isGPSEnabled()) {
+                    LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                            .requestLocationUpdates(locationRequest, new LocationCallback() {
+                                @Override
+                                public void onLocationResult(@NonNull LocationResult locationResult) {
+                                    super.onLocationResult(locationResult);
+
+                                    LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                                            .removeLocationUpdates(this);
+
+                                    if (locationResult.getLocations().size() > 0) {
+                                        int index = locationResult.getLocations().size() - 1;
+                                        latitude = locationResult.getLocations().get(index).getLatitude();
+                                        longitude = locationResult.getLocations().get(index).getLongitude();
+                                    }
+                                }
+                            }, Looper.getMainLooper());
+                } else {
+                    turnOnGPS();
+                }
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager;
+        boolean isEnabled;
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+        Intent i = new Intent(this, SensorActivity.class);
+        startActivity(i
+                      
+                      
+                      
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+
+    }
+
+    @Override
+    public void onResume() {
+       super.onResume();
+        if(System.currentTimeMillis()- prevTime >1000){
+            getGPS();
+            prevTime = System.currentTimeMillis();
+        }
+    }
+
+
+    private void turnOnGPS() {
+
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(task -> {
+
+            try {
+                task.getResult(ApiException.class);
+                Toast.makeText(MainActivity.this, "GPS is already tured on", Toast.LENGTH_SHORT).show();
+
+            } catch (ApiException e) {
+
+                switch (e.getStatusCode()) {
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                        try {
+                            ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                            resolvableApiException.startResolutionForResult(MainActivity.this, 2);
+                        } catch (IntentSender.SendIntentException ex) {
+                            ex.printStackTrace();
+                        }
+                        break;
+
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        //Device does not have location
+                        break;
                 }
             }
         });
-
-        Intent i = new Intent(this, SensorActivity.class);
-        startActivity(i);
     }
 
 }

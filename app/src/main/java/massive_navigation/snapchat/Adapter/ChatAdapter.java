@@ -16,8 +16,8 @@ import massive_navigation.snapchat.DataList.ChatList;
 
 public class ChatAdapter extends BaseAdapter {
 
-    private LayoutInflater mInflater;
-    private ArrayList<ChatList> mailArrayList;
+    private final LayoutInflater mInflater;
+    private final ArrayList<ChatList> mailArrayList;
 
     public ChatAdapter(Activity activity, ArrayList<ChatList> chatArrayList) {
 

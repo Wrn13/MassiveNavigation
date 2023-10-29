@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NodeManager {
-    private static NodeManager instance = new NodeManager();
+    private static final NodeManager instance = new NodeManager();
 
     private ArrayList<Node> nodes;
 

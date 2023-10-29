@@ -16,8 +16,8 @@ import massive_navigation.snapchat.DataList.StoriesList;
 
 public class StoriesAdapter extends BaseAdapter {
 
-    private LayoutInflater mInflater;
-    private ArrayList<StoriesList> storyArrayList;
+    private final LayoutInflater mInflater;
+    private final ArrayList<StoriesList> storyArrayList;
 
     public StoriesAdapter(Activity activity, ArrayList<StoriesList> storyArrayList) {
 
