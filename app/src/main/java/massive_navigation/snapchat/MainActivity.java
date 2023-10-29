@@ -1,5 +1,10 @@
 package massive_navigation.snapchat;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -14,7 +19,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
+
+import android.content.IntentSender;
+import android.widget.Toast;
+
+import com.example.massivenavigationnodes.Node;
+import com.example.massivenavigationnodes.NodeManager;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.tasks.Task;
 import com.example.massivenavigationnodes.SensorActivity;
+
+import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
@@ -38,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //NodeManager.getInstance().setContentResolver(getContentResolver());
+        NodeManager.getInstance().setContext(getApplicationContext());
+
+        try {
+            NodeManager.getInstance().testNodes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
@@ -51,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
         chat_btn = findViewById(R.id.chat_btn);
         story_btn = findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
+
+
+        CaptureBtn.setOnClickListener(v -> {
+            if (viewPager.getCurrentItem() != 1) {
+                viewPager.setCurrentItem(1, true);
+            } else {
+                Camera fragment = (Camera) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.ma_view_pager + ":" + viewPager.getCurrentItem());
+                fragment.TakePhoto();
+            }
+        });
 
 
         chat_btn.setOnClickListener(v -> {
@@ -74,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getGPS();
+
+        NodeManager.getInstance().findShortestPath(0, 1);
 
         // create an object textToSpeech and adding features into it
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {

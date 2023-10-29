@@ -1,22 +1,46 @@
 package com.example.massivenavigationnodes;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.net.Uri;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class NodeManager {
-    private static final NodeManager instance = new NodeManager();
+    private static NodeManager instance = new NodeManager();
+
+    private ContentResolver resolver;
+    private Context context;
 
     private ArrayList<Node> nodes;
 
     public static NodeManager getInstance() {
+
         return instance;
     }
 
     private NodeManager() {
         reset();
-        parseNodesFromFile();
+    }
+
+    public void setContentResolver(ContentResolver contResolver) {
+        resolver = contResolver;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public void reset() {
@@ -26,6 +50,11 @@ public class NodeManager {
         for (Node n : temp) {
 
         }*/
+    }
+
+    public void testNodes() throws IOException {
+        parseNodesFromFile();
+        findShortestPath(4, 8);
     }
 
     public void addNode(Node node) {
@@ -59,11 +88,12 @@ public class NodeManager {
 
         ArrayList<Integer> path = new ArrayList<>();
         int id = destinationId;
-        path.add(destinationId);
+        path.add(0,destinationId);
         while(id != startingId) {
-            path.add(parents[id]);
+            path.add(0,parents[id]);
             id = parents[id];
         }
+
         return Arrays.toString(path.toArray());
     }
 
@@ -80,7 +110,55 @@ public class NodeManager {
     }
 
     public void parseNodesFromFile() {
-        Node node0 = new Node("entrance", 89, 78);
+        Scanner scanner;
+        try {
+            AssetManager am = context.getAssets();
+            scanner = new Scanner(am.open("NodeList.csv"));
+        } catch (Exception e) {
+            System.exit(0);
+            return;
+        }
+
+        scanner.nextLine();
+
+        String[] data;
+        ArrayList<String> tempEdges = new ArrayList<>();
+        while(scanner.hasNext()) {
+            data = scanner.nextLine().split(",");
+            nodes.add(new Node(data[1], Float.parseFloat(data[5]), Float.parseFloat(data[6])));
+            tempEdges.add(data[4]);
+        }
+
+//        StringBuilder stringBuilder = new StringBuilder();
+//        BufferedReader reader;
+//        try {
+//            InputStream inputStream = resolver.openInputStream(Uri.fromFile(new File(this.context.getFilesDir(),"NodeList.csv")));
+//            reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//
+//        }
+//
+//
+//
+//        reader.readLine();
+//
+//        String[] data;
+//        ArrayList<String> tempEdges = new ArrayList<>();
+//        while(reader.ready()) {
+//            data = reader.readLine().split(",");
+//            nodes.add(new Node(data[1], Float.parseFloat(data[5]), Float.parseFloat(data[6])));
+//            tempEdges.add(data[4]);
+//        }
+
+        for(int i = 0; i < nodes.size(); i++) {
+            data = tempEdges.get(i).split(";");
+            for(int j = 0; j < data.length; j++) {
+                nodes.get(i).addEdge(nodes.get(Integer.parseInt(data[j])));
+            }
+        }
+
+        /*Node node0 = new Node("entrance", 89, 78);
         Node node1 = new Node("", 42, 86);
         Node node2 = new Node("", 90, 80);
         Node node3 = new Node("", 90, 80);
@@ -134,7 +212,7 @@ public class NodeManager {
 
         nodes.get(8).addEdge(nodes.get(2), 2);
         nodes.get(8).addEdge(nodes.get(7), 7);
-        nodes.get(8).addEdge(nodes.get(6), 6);
+        nodes.get(8).addEdge(nodes.get(6), 6);*/
 
         // add edges
         /*for(int i = 0; i < nodes.size(); i++) {
