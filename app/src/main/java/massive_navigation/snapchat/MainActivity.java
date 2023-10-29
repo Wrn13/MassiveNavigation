@@ -3,6 +3,7 @@ package massive_navigation.snapchat;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.annotation.SuppressLint;
@@ -41,7 +42,6 @@ import com.example.massivenavigationnodes.SensorActivity;
 import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
-import massive_navigation.snapchat.Fragment.Camera;
 
 import android.speech.tts.TextToSpeech;
 
@@ -165,7 +165,13 @@ public class MainActivity extends AppCompatActivity {
         return isEnabled;
 
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        Intent myIntent = getIntent();
+        String destString = myIntent.getStringExtra("@destination");
+        NodeManager.getInstance().startRoute(destString);
+    }
     @Override
     public void onResume() {
        super.onResume();
