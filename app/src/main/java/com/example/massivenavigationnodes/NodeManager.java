@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.SystemClock;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,33 +15,56 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import android.speech.tts.TextToSpeech;
+
+import massive_navigation.snapchat.MainActivity;
 
 public class NodeManager {
     private static NodeManager instance = new NodeManager();
 
-    private ContentResolver resolver;
-    private Context context;
+    public enum Direction{up, right, down, left};
 
+    public String message = "";
+    public boolean messageUpdate = false;
+    public boolean isUpdating = false;
+    private float ignoreTime;
+
+    private int currentIndex;
+
+    private float currentDistance;
+    private ContentResolver resolver;
+    private MainActivity mainActivity;
+    public static Context context;
+
+    private final double speed = 50;
     private ArrayList<Node> nodes;
+    private ArrayList<Integer> shortestPath;
+
+    private static TextToSpeech textToSpeech;
 
     public static NodeManager getInstance() {
-
         return instance;
     }
 
     private NodeManager() {
         reset();
+
     }
 
-    public void setContentResolver(ContentResolver contResolver) {
-        resolver = contResolver;
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
+    public void setMessageUpdate(boolean bool) {
+        this.messageUpdate = bool;
     }
 
     public void setContext(Context context) {
-        this.context = context;
+        NodeManager.context = context;
     }
 
     public void reset() {
@@ -54,14 +78,138 @@ public class NodeManager {
 
     public void testNodes() throws IOException {
         parseNodesFromFile();
-        findShortestPath(4, 8);
     }
 
     public void addNode(Node node) {
         nodes.add(node);
     }
 
-    public String findShortestPath(int startingId, int destinationId) {
+    public void startRoute(String destination){
+        Node start = nodes.get(8);
+        Node end = null;
+        boolean found = false;
+        int i = 0;
+
+        while(!found&&i<nodes.size()){
+            if(nodes.get(i).getName().equals(destination)){
+                found = true;
+                end = nodes.get(i);
+            }
+            i++;
+        }
+
+        findShortestPath(start.getID(),end.getID());
+        currentIndex = 0;
+        currentDistance = 0;
+        ignoreTime = SystemClock.elapsedRealtime();
+        isUpdating = true;
+    }
+    private int count = 0;
+    public void update(){
+        count++;
+        currentDistance += speed * (SystemClock.elapsedRealtime()-ignoreTime);
+        ignoreTime = SystemClock.elapsedRealtime();
+
+        message = "";
+        if(currentIndex==shortestPath.size()-1){
+            messageUpdate = true;
+            message = "You have reached your destination";
+            isUpdating = false;
+        }
+        else {
+            int nextNode = shortestPath.get(currentIndex);
+            HashMap<Node, Float> edges = nodes.get(nextNode)
+                    .getEdges();
+            if (edges.get(nodes.get(shortestPath.get(currentIndex + 1))) <= currentDistance) {
+
+            messageUpdate = true;
+                if (currentIndex < shortestPath.size() - 2) {
+//                double hypoth = (double)Math.sqrt(Math.pow(nodes.get(currentIndex).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex).getY()-nodes.get(currentIndex+2).getY(),2));
+//                double opposite = (double)Math.sqrt(Math.pow(nodes.get(currentIndex+1).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex+1).getY()-nodes.get(currentIndex+2).getY(),2));
+//                double angle = asin(opposite/hypoth);
+//
+//                if(angle>10){
+//                    message = "Take a left turn";
+//                }
+//                else if(angle<-10){
+//                    message = "Take a right turn";
+//                }\\
+
+                    Direction first = getDirection(currentIndex, currentIndex + 1);
+                    Direction second = getDirection(currentIndex + 1, currentIndex + 2);
+
+                    if (first.equals(second)) {
+                        message = "Continue Straight";
+                    } else if (first.equals(Direction.down)) {
+                        if (second.equals(Direction.right)) {
+                            message = "Take a left turn";
+                        } else {
+                            message = "Take a right turn";
+                        }
+                    } else if (first.equals(Direction.up)) {
+                        if (second.equals(Direction.right)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
+                    } else if (first.equals(Direction.right)) {
+                        if (second.equals(Direction.down)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
+                    } else {
+                        if (second.equals(Direction.up)) {
+                            message = "Take a right turn";
+                        } else {
+                            message = "Take a left turn";
+                        }
+                    }
+
+                } else {
+                    Direction first = getDirection(currentIndex, currentIndex + 1);
+                    if (first.equals(Direction.right)) {
+                        message = "Take a right turn";
+                    } else if (first.equals(Direction.left)) {
+                        message = "Take a left turn";
+                    } else {
+                        message = "Continue straight";
+                    }
+
+                }
+
+                currentIndex++;
+                currentDistance = 0;
+
+                mainActivity.tryListener();
+            }
+        }
+
+        //int i = MainActivity.textToSpeech.speak(""+message, TextToSpeech.QUEUE_ADD, null);
+    }
+
+    public Direction getDirection(int first, int second){
+        float deltaX = nodes.get(second).getX()-nodes.get(first).getX();
+        float deltaY = nodes.get(second).getY()-nodes.get(first).getY();
+
+        Direction direction = Direction.up;
+        if(Math.abs(deltaX)>Math.abs(deltaY)){
+            if(deltaX>0){
+                direction = Direction.right;
+            }
+            else{
+                direction = Direction.left;
+            }
+        }
+        else{
+            if(deltaY<0){
+                direction = Direction.down;
+            }
+        }
+        return direction;
+    }
+
+    public void findShortestPath(int startingId, int destinationId) {
         float[] list = new float[nodes.size()];
         boolean[] boolList = new boolean[nodes.size()];
         int[] parents = new int[nodes.size()];
@@ -86,6 +234,7 @@ public class NodeManager {
             }
         }
 
+
         ArrayList<Integer> path = new ArrayList<>();
         int id = destinationId;
         path.add(0,destinationId);
@@ -93,8 +242,7 @@ public class NodeManager {
             path.add(0,parents[id]);
             id = parents[id];
         }
-
-        return Arrays.toString(path.toArray());
+        shortestPath = path;
     }
 
     private int minDistance(float[] list, boolean[] boolList) {
@@ -151,7 +299,7 @@ public class NodeManager {
 //            tempEdges.add(data[4]);
 //        }
 
-        for(int i = 0; i < nodes.size(); i++) {
+        for(int i = 0; i < tempEdges.size(); i++) {
             data = tempEdges.get(i).split(";");
             for(int j = 0; j < data.length; j++) {
                 nodes.get(i).addEdge(nodes.get(Integer.parseInt(data[j])));

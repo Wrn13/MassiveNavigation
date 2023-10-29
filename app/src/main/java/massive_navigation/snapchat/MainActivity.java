@@ -3,6 +3,7 @@ package massive_navigation.snapchat;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.annotation.SuppressLint;
@@ -22,8 +23,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.IntentSender;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
 
-import com.example.massivenavigationnodes.Node;
+
 import com.example.massivenavigationnodes.NodeManager;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -40,7 +42,6 @@ import com.example.massivenavigationnodes.SensorActivity;
 import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
-import massive_navigation.snapchat.Fragment.Camera;
 
 import android.speech.tts.TextToSpeech;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     double latitude, longitude;
     private LocationRequest locationRequest;
     private long prevTime = System.currentTimeMillis();
-    TextToSpeech textToSpeech;
+    public static TextToSpeech textToSpeech;
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -60,12 +61,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NodeManager.context = this;
+        NodeManager nodeManger = NodeManager.getInstance();
 
         //NodeManager.getInstance().setContentResolver(getContentResolver());
-        NodeManager.getInstance().setContext(getApplicationContext());
+        nodeManger.setContext(getApplicationContext());
+        nodeManger.setMainActivity(this);
+
 
         try {
-            NodeManager.getInstance().testNodes();
+            nodeManger.testNodes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -83,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         chat_btn = findViewById(R.id.chat_btn);
         story_btn = findViewById(R.id.story_btn);
         settings = findViewById(R.id.settings);
-
 
         chat_btn.setOnClickListener(v -> {
             textToSpeech.speak("Pick where to go.",TextToSpeech.QUEUE_FLUSH,null);
@@ -106,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getGPS();
-
-        NodeManager.getInstance().findShortestPath(0, 1);
 
         // create an object textToSpeech and adding features into it
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -158,12 +160,55 @@ public class MainActivity extends AppCompatActivity {
         boolean isEnabled;
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
 
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Intent myIntent = getIntent();
+        String destString = myIntent.getStringExtra("@destination");
+        if(destString != null){
+            NodeManager nm = NodeManager.getInstance();
+            nm.startRoute(destString);
+            while (nm.isUpdating) {
+                final ViewPager viewPager = findViewById(R.id.ma_view_pager);
 
+                MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+                viewPager.setAdapter(mainPagerAdapter);
+                viewPager.setCurrentItem(1);
+                NodeManager.context = this;
+                if(NodeManager.getInstance().messageUpdate) {
+                    chat_btn.setOnClickListener(v -> {
+                        textToSpeech.speak(NodeManager.getInstance().message, TextToSpeech.QUEUE_FLUSH, null);
+                        if (viewPager.getCurrentItem() != 0) {
+                            viewPager.setCurrentItem(0, true);
+                        }
+                    });
+                    NodeManager.getInstance().setMessageUpdate(false);
+                }
+                nm.update();
+            }
+        }
+    }
+
+    public void tryListener(){
+        final ViewPager viewPager = findViewById(R.id.ma_view_pager);
+        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mainPagerAdapter);
+        viewPager.setCurrentItem(1);
+        NodeManager.context = this;
+        if(NodeManager.getInstance().messageUpdate) {
+            chat_btn.setOnClickListener(v -> {
+                textToSpeech.speak(NodeManager.getInstance().message, TextToSpeech.QUEUE_FLUSH, null);
+                if (viewPager.getCurrentItem() != 0) {
+                    viewPager.setCurrentItem(0, true);
+                }
+            });
+            NodeManager.getInstance().setMessageUpdate(false);
+        }
+    }
     @Override
     public void onResume() {
        super.onResume();
