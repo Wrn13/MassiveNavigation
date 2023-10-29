@@ -38,15 +38,11 @@ public class Chat extends Fragment {
         chatListArrayList.add(new ChatList("High Street Entrance", "Tap to navigate", R.drawable.westplaza));
         chatListArrayList.add(new ChatList("Information Center", "Tap to navigate", R.drawable.informationdesk));
         chatListArrayList.add(new ChatList("Multicultural Doors", "Tap to navigate", R.drawable.westplaza));
-
-        chatListArrayList.add(new ChatList("West Plaza", "Tap to navigate", R.drawable.westplaza));
-        chatListArrayList.add(new ChatList("Union Market", "Tap to navigate", R.drawable.unionmarket));
-        chatListArrayList.add(new ChatList("Espress-oh", "Tap to navigate", R.drawable.espressooh));
-        chatListArrayList.add(new ChatList("Woody's Tavern", "Tap to navigate", R.drawable.woodystavern));
-        chatListArrayList.add(new ChatList("Brutus Buckeye Statue", "Tap to navigate", R.drawable.brutusstatue));
-        chatListArrayList.add(new ChatList("Ben and Arlene Lounge", "Tap to navigate", R.drawable.benandarleenlounge));
-        chatListArrayList.add(new ChatList("Sloopy's Diner", "Tap to navigate", R.drawable.sloopysdiner));
-        chatListArrayList.add(new ChatList("Performance Hall", "Tap to navigate", R.drawable.performancehall));
+        chatListArrayList.add(new ChatList("unionMarket", "Tap to navigate", R.drawable.unionmarket));
+        chatListArrayList.add(new ChatList("ExpressOH", "Tap to navigate", R.drawable.espressooh));
+        chatListArrayList.add(new ChatList("Brutus", "Tap to navigate", R.drawable.brutusstatue));
+        chatListArrayList.add(new ChatList("BenAndArleneLounge", "Tap to navigate", R.drawable.benandarleenlounge));
+        chatListArrayList.add(new ChatList("PerformanceHall Doors", "Tap to navigate", R.drawable.performancehall));
 
         ChatAdapter chatAdapter = new ChatAdapter(getActivity(), chatListArrayList);
         if (chatList != null) {
