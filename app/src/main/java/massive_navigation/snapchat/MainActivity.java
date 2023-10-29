@@ -1,9 +1,7 @@
 package massive_navigation.snapchat;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,19 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.IntentSender;
-import android.widget.Toast;
-
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.tasks.Task;
+import com.example.massivenavigationnodes.SensorActivity;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
 import massive_navigation.snapchat.Fragment.Camera;
@@ -118,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
+        Intent i = new Intent(this, SensorActivity.class);
+        startActivity(i
+                      
+                      
+                      
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
 
@@ -168,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
 }
