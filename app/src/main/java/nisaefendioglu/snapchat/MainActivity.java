@@ -1,5 +1,6 @@
 package nisaefendioglu.snapchat;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView CaptureBtn,chat_btn,story_btn,settings;
 
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
