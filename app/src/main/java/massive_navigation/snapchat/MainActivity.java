@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         //NodeManager.getInstance().setContentResolver(getContentResolver());
         NodeManager.getInstance().setContext(getApplicationContext());
+        NodeManager.getInstance().setMainActivity(this);
+
 
         try {
             NodeManager.getInstance().testNodes();

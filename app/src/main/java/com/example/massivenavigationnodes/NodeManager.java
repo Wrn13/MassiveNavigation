@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.SystemClock;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,13 +19,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
+import massive_navigation.snapchat.MainActivity;
+
 public class NodeManager {
     private static NodeManager instance = new NodeManager();
 
+    public enum Direction{up, right, down, left};
+    private float ignoreTime;
+
+    private int currentIndex;
+
+    private float currentDistance;
     private ContentResolver resolver;
+    private MainActivity mainActivity;
     private Context context;
 
+    private final double speed = 75;
     private ArrayList<Node> nodes;
+    private ArrayList<Integer> shortestPath;
 
     public static NodeManager getInstance() {
 
@@ -33,10 +45,11 @@ public class NodeManager {
 
     private NodeManager() {
         reset();
+
     }
 
-    public void setContentResolver(ContentResolver contResolver) {
-        resolver = contResolver;
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     public void setContext(Context context) {
@@ -54,14 +67,137 @@ public class NodeManager {
 
     public void testNodes() throws IOException {
         parseNodesFromFile();
-        findShortestPath(4, 8);
     }
 
     public void addNode(Node node) {
         nodes.add(node);
     }
 
-    public String findShortestPath(int startingId, int destinationId) {
+    public void startRoute(String destination){
+        Node start = nodes.get(8);
+        Node end = start;
+        boolean found = false;
+        int i = 0;
+
+        while(!found&&i<nodes.size()){
+            if(nodes.get(i).getName().equals(destination)){
+                found = true;
+                end = nodes.get(i);
+            }
+            i++;
+        }
+
+        findShortestPath(start.getID(),end.getID());
+        currentIndex = 0;
+        currentDistance = 0;
+        ignoreTime = SystemClock.elapsedRealtime();
+    }
+
+    public void update(){
+
+        currentDistance += speed * (SystemClock.elapsedRealtime()-ignoreTime);
+        ignoreTime = SystemClock.elapsedRealtime();
+
+        if(nodes.get(shortestPath.get(currentIndex+1)).getEdges().get(shortestPath.get(currentIndex+1))<=currentDistance){
+
+            String message = "";
+            if(currentIndex+1>=shortestPath.size()-1){
+                message = "You have reached your destination";
+            }
+            else if(currentIndex<shortestPath.size()-2) {
+//                double hypoth = (double)Math.sqrt(Math.pow(nodes.get(currentIndex).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex).getY()-nodes.get(currentIndex+2).getY(),2));
+//                double opposite = (double)Math.sqrt(Math.pow(nodes.get(currentIndex+1).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex+1).getY()-nodes.get(currentIndex+2).getY(),2));
+//                double angle = asin(opposite/hypoth);
+//
+//                if(angle>10){
+//                    message = "Take a left turn";
+//                }
+//                else if(angle<-10){
+//                    message = "Take a right turn";
+//                }\\
+
+                Direction first = getDirection(currentIndex,currentIndex+1);
+                Direction second = getDirection(currentIndex+1, currentIndex+2);
+
+                if(first.equals(second)){
+                    message = "Continue Straight";
+                }
+                else if(first.equals(Direction.down)){
+                    if(second.equals(Direction.right)){
+                        message = "Take a left turn";
+                    }
+                    else{
+                        message = "Take a right turn";
+                    }
+                }
+                else if(first.equals(Direction.up)){
+                    if(second.equals(Direction.right)){
+                        message = "Take a right turn";
+                    }
+                    else{
+                        message = "Take a left turn";
+                    }
+                }
+                else if(first.equals(Direction.right)){
+                    if(second.equals(Direction.down)){
+                        message = "Take a right turn";
+                    }
+                    else{
+                        message = "Take a left turn";
+                    }
+                }
+                else {
+                    if (second.equals(Direction.up)) {
+                        message = "Take a right turn";
+                    } else {
+                        message = "Take a left turn";
+                    }
+                }
+
+            }
+            else{
+                Direction first = getDirection(currentIndex,currentIndex+1);
+                if(first.equals(Direction.right)){
+                    message = "Take a right turn";
+                }
+                else if(first.equals(Direction.left)){
+                    message = "Take a left turn";
+                }else{
+                    message = "Continue straight";
+                }
+
+            }
+
+
+            currentIndex++;
+            currentDistance = 0;
+        }
+
+
+    }
+
+    public Direction getDirection(int first, int second){
+        float deltaX = nodes.get(second).getX()-nodes.get(first).getX();
+        float deltaY = nodes.get(second).getY()-nodes.get(first).getY();
+
+        Direction direction = Direction.up;
+        if(Math.abs(deltaX)>Math.abs(deltaY)){
+            if(deltaX>0){
+                direction = Direction.right;
+            }
+            else{
+                direction = Direction.left;
+            }
+        }
+        else{
+            if(deltaY<0){
+                direction = Direction.down;
+            }
+        }
+        return direction;
+    }
+
+    public void findShortestPath(int startingId, int destinationId) {
         float[] list = new float[nodes.size()];
         boolean[] boolList = new boolean[nodes.size()];
         int[] parents = new int[nodes.size()];
@@ -86,6 +222,7 @@ public class NodeManager {
             }
         }
 
+
         ArrayList<Integer> path = new ArrayList<>();
         int id = destinationId;
         path.add(0,destinationId);
@@ -93,8 +230,7 @@ public class NodeManager {
             path.add(0,parents[id]);
             id = parents[id];
         }
-
-        return Arrays.toString(path.toArray());
+        shortestPath = path;
     }
 
     private int minDistance(float[] list, boolean[] boolList) {
