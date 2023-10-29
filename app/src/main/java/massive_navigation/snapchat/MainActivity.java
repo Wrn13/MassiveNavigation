@@ -188,11 +188,11 @@ public class MainActivity extends AppCompatActivity {
                     });
                     NodeManager.getInstance().setMessageUpdate(false);
                 }
+
                 nm.update();
             }
         }
     }
-
     public void tryListener(){
         final ViewPager viewPager = findViewById(R.id.ma_view_pager);
         MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());

@@ -38,6 +38,7 @@ public class NodeManager {
     private float currentDistance;
     private ContentResolver resolver;
     private MainActivity mainActivity;
+
     public static Context context;
 
     private final double speed = 50;
@@ -123,6 +124,7 @@ public class NodeManager {
             if (edges.get(nodes.get(shortestPath.get(currentIndex + 1))) <= currentDistance) {
 
             messageUpdate = true;
+
                 if (currentIndex < shortestPath.size() - 2) {
 //                double hypoth = (double)Math.sqrt(Math.pow(nodes.get(currentIndex).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex).getY()-nodes.get(currentIndex+2).getY(),2));
 //                double opposite = (double)Math.sqrt(Math.pow(nodes.get(currentIndex+1).getX()-nodes.get(currentIndex+2).getX(),2)+Math.pow(nodes.get(currentIndex+1).getY()-nodes.get(currentIndex+2).getY(),2));
