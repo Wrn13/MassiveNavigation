@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:layout_height="match_parent"
-    android:background="#0000FF">
+    android:background="#1E69FF">
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@drawable/logo"/>
+        android:layout_width="371dp"
+        android:layout_height="398dp"
+        android:background="@drawable/logo" />
 
 </RelativeLayout>
