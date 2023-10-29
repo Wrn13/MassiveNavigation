@@ -1,15 +1,20 @@
 package massive_navigation.snapchat.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.massivenavigationnodes.NodeManager;
+
 import java.util.ArrayList;
 
+import massive_navigation.snapchat.MainActivity;
 import massive_navigation.snapchat.R;
 import massive_navigation.snapchat.Adapter.ChatAdapter;
 import massive_navigation.snapchat.DataList.ChatList;
@@ -52,7 +57,11 @@ public class Chat extends Fragment {
         if (chatList != null) {
             chatList.setAdapter(chatAdapter);
         }
-
+        chatList.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent intent = new Intent(this.getContext(), MainActivity.class);
+            intent.putExtra("@destination", ((ChatList)adapterView.getItemAtPosition(i)).getName());
+            startActivity(intent);
+        });
         return view;
 
 

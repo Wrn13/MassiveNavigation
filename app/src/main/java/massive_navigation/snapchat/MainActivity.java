@@ -3,6 +3,7 @@ package massive_navigation.snapchat;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.annotation.SuppressLint;
@@ -24,7 +25,7 @@ import android.content.IntentSender;
 import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 
-import com.example.massivenavigationnodes.Node;
+
 import com.example.massivenavigationnodes.NodeManager;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -41,7 +42,6 @@ import com.example.massivenavigationnodes.SensorActivity;
 import java.io.IOException;
 
 import massive_navigation.snapchat.Adapter.MainPagerAdapter;
-import massive_navigation.snapchat.Fragment.Camera;
 
 import android.speech.tts.TextToSpeech;
 
@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
         });
         getGPS();
 
-        NodeManager.getInstance().findShortestPath(0, 1);
-
         // create an object textToSpeech and adding features into it
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -165,7 +163,19 @@ public class MainActivity extends AppCompatActivity {
         return isEnabled;
 
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        Intent myIntent = getIntent();
+        String destString = myIntent.getStringExtra("@destination");
+        if(destString != null){
+            NodeManager nm = NodeManager.getInstance();
+            nm.startRoute(destString);
+            while (nm.isUpdating) {
+                nm.update();
+            }
+        }
+    }
     @Override
     public void onResume() {
        super.onResume();
