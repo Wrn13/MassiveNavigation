@@ -3,6 +3,7 @@ package com.example.massivenavigationnodes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 
 import java.util.Arrays;
 
+import massive_navigation.snapchat.MainActivity;
 import massive_navigation.snapchat.R;
 
 public class SensorActivity extends Activity implements SensorEventListener {
@@ -51,10 +53,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private boolean lastAccelerometerSet = false;
     private boolean lastMagnetometerSet = false;
     private float[] orientation = new float[3];
-    private TextView compassOutput;
-
-
     long prevTime = 0L;
+
     @SuppressLint("MissingInflatedId")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.sensor_display);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         compassImage = findViewById(R.id.compass);
-        compassOutput = findViewById(R.id.compassOutput);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -148,7 +147,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
             float azimuthInRadians = orientation[0];
             float azimuthInDegrees = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
-            compassOutput.setText(String.format("%f", azimuthInDegrees));
         }
     }
 
